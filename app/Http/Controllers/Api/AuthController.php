@@ -17,6 +17,7 @@ class AuthController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:app_users,email',
             'password' => 'required|string|min:6',
+            'apellidos' => 'nullable|string|max:255',
         ], [], [
             'name'     => 'nombre',
             'email'    => 'correo electrónico',
@@ -26,11 +27,12 @@ class AuthController extends Controller
         $code = str_pad(random_int(0, 99999), 5, '0', STR_PAD_LEFT);
 
         $user = AppUser::create([
-            'name'              => $data['name'],
-            'email'             => $data['email'],
-            'password'          => bcrypt($data['password']),
-            'verification_code' => $code,
+            'name' => $request->name,
+            'apellidos' => $request->apellidos,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
+
 
         Mail::to($user->email)->send(new UserVerificationCodeMail($code));
 
