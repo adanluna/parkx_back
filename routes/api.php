@@ -6,6 +6,9 @@ use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\WalletController;
+use App\Http\Controllers\Api\EstadoController;
+use App\Http\Controllers\Api\MunicipioController;
+use App\Http\Controllers\Api\EstacionamientoController;
 
 Route::post('/register',     [AuthController::class, 'register']);
 Route::post('/login',        [AuthController::class, 'login']);
@@ -24,4 +27,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('/wallets/{id}', [WalletController::class, 'update']);
     Route::get('/wallets/{user_id}', [WalletController::class, 'show']);
+
+    Route::get('/estados', [EstadoController::class, 'index']);
+    Route::apiResource('municipios', MunicipioController::class);
+    Route::apiResource('estacionamientos', EstacionamientoController::class);
+    Route::get('/estacionamientos/cercanos', [EstacionamientoController::class, 'cercanos']);
+    Route::get('/estacionamientos/buscar', [EstacionamientoController::class, 'buscarPorNombre']);
 });
