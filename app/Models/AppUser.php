@@ -24,4 +24,9 @@ class AppUser extends Model
     {
         return $query->whereNull('deleted_at');
     }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
 }

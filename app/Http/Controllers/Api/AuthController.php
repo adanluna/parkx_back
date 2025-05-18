@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\AppUser;
 use App\Mail\UserVerificationCodeMail;
+use App\Models\Wallet;
 
 class AuthController extends Controller
 {
@@ -31,8 +32,14 @@ class AuthController extends Controller
             'apellidos' => $request->apellidos,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'verification_code' => $code,
+            'is_verified' => false,
         ]);
 
+        Wallet::create([
+            'user_id' => $user->id,
+            'balance'     => 0.00,
+        ]);
 
         Mail::to($user->email)->send(new UserVerificationCodeMail($code));
 
