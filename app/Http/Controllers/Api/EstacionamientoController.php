@@ -12,6 +12,7 @@ class EstacionamientoController extends Controller
     public function index(Request $request)
     {
         $query = Estacionamiento::with(['estado', 'municipio'])
+            ->with('estacionamientos')
             ->where('is_active', true);
 
         if ($request->filled('estado_id')) {
@@ -39,6 +40,8 @@ class EstacionamientoController extends Controller
             'is_active'    => 'boolean',
             'estado_id'    => 'required|exists:estados,id',
             'municipio_id' => 'required|exists:municipios,id',
+            'direccion' => 'nullable|string|max:255',
+
         ]);
 
         $estacionamiento = Estacionamiento::create($data);
@@ -76,6 +79,8 @@ class EstacionamientoController extends Controller
             'is_active'    => 'sometimes|boolean',
             'estado_id'    => 'sometimes|exists:estados,id',
             'municipio_id' => 'sometimes|exists:municipios,id',
+            'direccion' => 'nullable|string|max:255',
+
         ]);
 
         $estacionamiento->update($data);
@@ -106,6 +111,8 @@ class EstacionamientoController extends Controller
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
             'radio' => 'nullable|numeric',
+            'direccion' => 'nullable|string|max:255',
+
         ]);
 
         $lat = $request->lat;
@@ -142,6 +149,22 @@ class EstacionamientoController extends Controller
         $query = Estacionamiento::with(['estado', 'municipio'])
             ->where('is_active', true)
             ->where('nombre', 'LIKE', '%' . $request->nombre . '%');
+
+        return response()->json([
+            'status' => true,
+            'data' => $query->get()
+        ]);
+    }
+
+    public function buscarPorEstado(Request $request)
+    {
+        $request->validate([
+            'estado_id' => 'required',
+        ]);
+
+        $query = Estacionamiento::with(['estado', 'municipio'])
+            ->where('is_active', true)
+            ->where('estado_id', $request->estado_id);
 
         return response()->json([
             'status' => true,

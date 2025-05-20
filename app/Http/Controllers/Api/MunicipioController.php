@@ -9,11 +9,17 @@ use App\Models\Estacionamiento;
 
 class MunicipioController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $data = $request->validate([
+            'municipio_id' => 'required|exists:municipios,id',
+        ]);
+
+        $municipio = Municipio::with('estado')->find($data['municipio_id']);
+
         return response()->json([
             'status' => true,
-            'data' => Municipio::with('estado')->get()
+            'data' => $municipio
         ]);
     }
 

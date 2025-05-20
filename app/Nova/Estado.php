@@ -6,6 +6,7 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Illuminate\Http\Request;
 use Laravel\Nova\Resource;
+use Laravel\Nova\Fields\Boolean;
 
 class Estado extends Resource
 {
@@ -23,6 +24,11 @@ class Estado extends Resource
             Text::make('Nombre')
                 ->sortable()
                 ->rules('required', 'max:255'),
+
+            Boolean::make('Activo', 'is_active')
+                ->trueValue(1)
+                ->falseValue(0)
+
         ];
     }
 }

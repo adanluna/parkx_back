@@ -9,12 +9,13 @@ class Estacionamiento extends Model
 {
     protected $fillable = [
         'nombre',
-        'longitud',
+        'direccion',
         'latitud',
-        'is_active',
+        'longitud',
         'estado_id',
         'municipio_id',
     ];
+
 
     protected $with = ['estado', 'municipio'];
 

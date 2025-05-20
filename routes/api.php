@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\WalletController;
 use App\Http\Controllers\Api\EstadoController;
 use App\Http\Controllers\Api\MunicipioController;
 use App\Http\Controllers\Api\EstacionamientoController;
+use App\Http\Controllers\Api\PreguntaController;
 
 Route::post('/register',     [AuthController::class, 'register']);
 Route::post('/login',        [AuthController::class, 'login']);
@@ -30,7 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/estados', [EstadoController::class, 'index']);
     Route::apiResource('municipios', MunicipioController::class);
-    Route::apiResource('estacionamientos', EstacionamientoController::class);
-    Route::get('/estacionamientos/cercanos', [EstacionamientoController::class, 'cercanos']);
-    Route::get('/estacionamientos/buscar', [EstacionamientoController::class, 'buscarPorNombre']);
+    Route::apiResource('estacionamientos/estacionamiento', EstacionamientoController::class);
+    Route::post('/estacionamientos/estados', [EstacionamientoController::class, 'buscarPorEstado']);
+    Route::post('/estacionamientos/cercanos', [EstacionamientoController::class, 'cercanos']);
+    Route::post('/estacionamientos/buscar', [EstacionamientoController::class, 'buscarPorNombre']);
+
+    Route::get('/preguntas-frecuentes', [PreguntaController::class, 'index']);
 });

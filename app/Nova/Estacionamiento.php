@@ -47,6 +47,10 @@ class Estacionamiento extends Resource
                 ->displayUsingLabels()
                 ->onlyOnForms(),
 
+            Text::make('Dirección', 'direccion')
+                ->sortable()
+                ->rules('nullable', 'max:255'),
+
             Text::make('Estado', function () {
                 return $this->estado->nombre ?? '';
             })->onlyOnIndex(),
