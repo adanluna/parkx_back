@@ -42,7 +42,7 @@ class WebhookController extends Controller
                     $user = AppUser::where('stripe_id', $customerId)->first();
 
                     if ($user) {
-                        $balance = WalletController::addFundsStripeId($customerId, $amount);
+                        $balance = WalletController::addFunds($user->id, $amount);
                         TransaccionController::addTransaccion($user->id, $amount, $paymentMethod, '', 'abono', null);
                         DB::table('wallets')->where('user_id', $user->id)->update(['balance' => $balance]);
 

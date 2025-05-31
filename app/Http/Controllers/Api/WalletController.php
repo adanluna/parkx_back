@@ -74,13 +74,6 @@ class WalletController extends Controller
         return $wallet->balance;
     }
 
-    static function addFundsStripeId(String $stripe_id, String $amount): float
-    {
-        $wallet = Wallet::where('stripe_id', $stripe_id)->first();
-        $wallet->increment('balance', floatval($amount));
-        return $wallet->balance;
-    }
-
     static function withdraw(int $user_id, String $amount): float
     {
         $wallet = Wallet::where('user_id', $user_id)->first();
