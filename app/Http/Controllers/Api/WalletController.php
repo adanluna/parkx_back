@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Stripe\StripeClient;
 
 class WalletController extends Controller
 {
@@ -32,7 +34,10 @@ class WalletController extends Controller
 
         $wallet->update($request->only('balance'));
 
-        return response()->json($wallet);
+        return response()->json([
+            'status'  => true,
+            'data' => $wallet
+        ], 200);
     }
 
     // Obtener una billetera por ID
@@ -43,6 +48,43 @@ class WalletController extends Controller
             return response()->json(['message' => 'Billetera no encontrada'], 404);
         }
 
-        return response()->json($wallet);
+        return response()->json([
+            'status'  => true,
+            'data' => $wallet
+        ], 200);
+    }
+
+    public function get(Request $request)
+    {
+        $stripe_key = env('STRIPE_SECRET_KEY');
+        $stripe = new StripeClient($stripe_key);
+        $wallet = Wallet::where('user_id', $request->user()->id)->first();
+        $cards = $stripe->customers->allPaymentMethods($request->user()->stripe_id, ['type' => 'card',]);
+        $wallet['cards'] = $cards['data'];
+        return response()->json([
+            'status'  => true,
+            'data' => $wallet
+        ], 200);
+    }
+
+    static function addFunds(int $user_id, String $amount): float
+    {
+        $wallet = Wallet::where('user_id', $user_id)->first();
+        $wallet->increment('balance', floatval($amount));
+        return $wallet->balance;
+    }
+
+    static function addFundsStripeId(String $stripe_id, String $amount): float
+    {
+        $wallet = Wallet::where('strupe:_id', $stripe_id)->first();
+        $wallet->increment('balance', floatval($amount));
+        return $wallet->balance;
+    }
+
+    static function withdraw(int $user_id, String $amount): float
+    {
+        $wallet = Wallet::where('user_id', $user_id)->first();
+        $wallet->decrement('balance', floatval($amount));
+        return $wallet->balance;
     }
 }

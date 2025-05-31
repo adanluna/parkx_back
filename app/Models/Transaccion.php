@@ -3,15 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Nova\Fields\Hidden;
 
-class Wallet extends Model
+class Transaccion extends Model
 {
-    protected $table = 'wallets';
-
-    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+    protected $table = "transacciones";
 
     protected $guarded = [];
+
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 
     // Relations
     public function user()

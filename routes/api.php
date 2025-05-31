@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\EstadoController;
 use App\Http\Controllers\Api\MunicipioController;
 use App\Http\Controllers\Api\EstacionamientoController;
 use App\Http\Controllers\Api\PreguntaController;
+use App\Http\Controllers\Api\StripeController;
 
 Route::post('/register',     [AuthController::class, 'register']);
 Route::post('/login',        [AuthController::class, 'login']);
@@ -27,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/user',   [UserController::class, 'deleteUser']);
 
     Route::put('/wallets/{id}', [WalletController::class, 'update']);
-    Route::get('/wallets/{user_id}', [WalletController::class, 'show']);
+    Route::get('/wallet', [WalletController::class, 'get']);
 
     Route::get('/estados', [EstadoController::class, 'index']);
     Route::apiResource('municipios', MunicipioController::class);
@@ -37,4 +38,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/estacionamientos/buscar', [EstacionamientoController::class, 'buscarPorNombre']);
 
     Route::get('/preguntas-frecuentes', [PreguntaController::class, 'index']);
+
+    Route::group([
+        'prefix' => 'stripe'
+    ], function () {
+        Route::post('/create-customer', [StripeController::class, 'createCustomer']);
+        Route::get('/create-intent-card', [StripeController::class, 'createIntentCard']);
+        Route::get('/get-cards', [StripeController::class, 'getCards']);
+        Route::post('/delete-card', [StripeController::class, 'deleteCard']);
+        Route::post('/payment', [StripeController::class, 'payment']);
+        Route::post('/attach', [StripeController::class, 'attachCard']);
+        Route::post('/create-payment-intent', [StripeController::class, 'createPaymentIntent']);
+    });
 });

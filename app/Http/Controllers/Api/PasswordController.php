@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AppUser;
 use App\Mail\PasswordResetCodeMail;
+use Illuminate\Support\Facades\Log;
 
 class PasswordController extends Controller
 {
@@ -47,10 +48,11 @@ class PasswordController extends Controller
 
     public function resetPassword(Request $request)
     {
+        Log::info('Reset Password Request', ['request' => $request->all()]);
         $validator = Validator::make($request->all(), [
             'email'                 => 'required|email|exists:app_users,email',
-            'code'                  => 'required|string',
-            'password'              => 'required|string|min:6|confirmed',
+            'code'                  => 'required',
+            'password'              => 'required',
         ], [], [
             'email'    => 'correo electrónico',
             'code'     => 'código',
@@ -58,9 +60,14 @@ class PasswordController extends Controller
         ]);
 
         if ($validator->fails()) {
+            Log::info('Validation Failed', ['errors' => $validator->errors()]);
+            $errors = $validator->errors();
+            $mensajePlano = collect($errors->toArray())
+                ->flatten()
+                ->implode(', ');
             return response()->json([
                 'status'  => false,
-                'message' => 'Validación fallida.',
+                'message' => $mensajePlano,
                 'errors'  => $validator->errors(),
             ], 422);
         }

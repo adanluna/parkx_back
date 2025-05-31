@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\AppUser;
 use App\Mail\UserVerificationCodeMail;
 use App\Models\Wallet;
+use Stripe\StripeClient;
 
 class AuthController extends Controller
 {
@@ -27,6 +28,12 @@ class AuthController extends Controller
 
         $code = str_pad(random_int(0, 99999), 5, '0', STR_PAD_LEFT);
 
+        $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
+        $customer = $stripe->customers->create([
+            'name' => $request->name,
+            'email' =>  $request->email,
+        ]);
+
         $user = AppUser::create([
             'name' => $request->name,
             'apellidos' => $request->apellidos,
@@ -34,11 +41,12 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'verification_code' => $code,
             'is_verified' => false,
+            'stripe_id' => $customer->id,
         ]);
 
         Wallet::create([
             'user_id' => $user->id,
-            'balance'     => 0.00,
+            'balance' => 0.00,
         ]);
 
         Mail::to($user->email)->send(new UserVerificationCodeMail($code));
