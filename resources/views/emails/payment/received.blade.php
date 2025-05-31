@@ -3,12 +3,12 @@
 
     Hemos recibido un depósito en tu cuenta con los siguientes detalles:
 
-    - **Monto:** ${{ number_format($amount, 2) }} MXN
-    - **Método de Pago:** {{ ucfirst($paymentMethod) }}
-    - **Fecha:** {{ \Carbon\Carbon::parse($date)->format('d/m/Y H:i') }}
+    - Monto: ${{ number_format($amount, 2) }} MXN
+    - Método de Pago: {{ ucfirst($paymentMethod) }}
+    - Fecha: {{ \Carbon\Carbon::parse($date)->format('d/m/Y H:i') }}
 
     Gracias por confiar en nosotros.
 
-    Saludos,<br>
+    Saludos,
     {{ config('app.name') }}
 @endcomponent
