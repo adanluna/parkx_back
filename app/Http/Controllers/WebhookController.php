@@ -62,6 +62,9 @@ class WebhookController extends Controller
         } catch (SignatureVerificationException $e) {
             Log::error('Error de verificación de firma: ' . $e->getMessage());
             return response()->json(['error' => 'Firma inválida'], 400);
+        } catch (\Throwable $e) {
+            Log::error('Error en webhook: ' . $e->getMessage());
+            return response()->json(['error' => 'Error interno en el webhook', 'details' => $e->getMessage()], 500);
         }
     }
 }
