@@ -29,15 +29,11 @@ class WebhookController extends Controller
                 $endpointSecret
             );
 
-            Log::info('Evento recibido de Stripe', [
-                'type' => $event->type,
-                'data' => $event->data->object
-            ]);
-
             // Procesa el evento según su tipo
             switch ($event->type) {
                 case 'payment_intent.succeeded':
                     $paymentIntent = $event->data->object;
+                    Log::info($paymentIntent->customer);
                     $amount = number_format(($paymentIntent->amount / 100), 2, '.', '');
                     $customerId = $paymentIntent->customer;
                     $paymentMethod = $paymentIntent->payment_method_types[0];
