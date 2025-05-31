@@ -7,4 +7,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/webhook', [WebhookController::class, 'handleWebhook']);
+Route::any('/webhook', [WebhookController::class, 'handleWebhook']);
