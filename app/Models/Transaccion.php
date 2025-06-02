@@ -12,7 +12,9 @@ class Transaccion extends Model
 
     protected function serializeDate(\DateTimeInterface $date)
     {
-        return $date->format('Y-m-d H:i:s');
+        return (new \DateTime($date->format('Y-m-d H:i:s'), $date->getTimezone()))
+            ->setTimezone(new \DateTimeZone('America/Tijuana'))
+            ->format('Y-m-d H:i:s');
     }
 
     // Relations
