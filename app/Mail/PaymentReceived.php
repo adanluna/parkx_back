@@ -22,7 +22,12 @@ class PaymentReceived extends Mailable
     {
         $this->user = $user;
         $this->amount = $amount;
-        $this->paymentMethod = $paymentMethod;
+        $this->paymentMethod = match ($paymentMethod) {
+            'card' => 'Tarjeta de crédito/débito',
+            'oxxo' => 'Pago en OXXO',
+            'customer_balance' => 'Transferencia Bancaria',
+            default => ucfirst($paymentMethod),
+        };
         $this->date = $date;
     }
 
