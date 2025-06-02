@@ -33,17 +33,17 @@ class WebhookController extends Controller
             switch ($event->type) {
                 case 'payment_intent.succeeded':
                     $paymentIntent = $event->data->object;
-                    Log::info($paymentIntent->customer);
                     $amount = number_format(($paymentIntent->amount / 100), 2, '.', '');
                     $customerId = $paymentIntent->customer;
                     $paymentMethod = $paymentIntent->payment_method_types[0];
+                    $paymentIntentId = $paymentIntent->id;
 
                     // Buscar al usuario asociado en tu base de datos
                     $user = AppUser::where('stripe_id', $customerId)->first();
 
                     if ($user) {
                         $balance = WalletController::addFunds($user->id, $amount);
-                        TransaccionController::addTransaccion($user->id, $amount, $paymentMethod, '', 'abono', null);
+                        TransaccionController::addTransaccion($user->id, $amount, $paymentMethod, $paymentIntentId, 'abono', null);
                         DB::table('wallets')->where('user_id', $user->id)->update(['balance' => $balance]);
 
                         $date = $paymentIntent->created;

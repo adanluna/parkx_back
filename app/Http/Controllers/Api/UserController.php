@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\UserDeletedMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -51,7 +52,7 @@ class UserController extends Controller
         $originalEmail = $user->email;
 
         // Marcar como eliminado
-        $user->email = $user->email . '.deleted';
+        $user->email = $user->email . '.deleted.' . $user->id;
         $user->deleted_at = now();
         $user->save();
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Stripe\Service\Treasury\TreasuryServiceFactory;
 use Stripe\StripeClient;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -174,22 +175,27 @@ class StripeController extends Controller
             ];
 
             if ($method === 'oxxo') {
-                $params['payment_method_types'] = [$method];
+                $params['payment_method_types'] = ['oxxo'];
                 $params['payment_method_options'] = [
                     'oxxo' => [
                         'expires_after_days' => 2
                     ]
                 ];
             } else {
-                $params['payment_method_types'] = ['bank_transfer'];
+                $params['payment_method_types'] = ['customer_balance'];
+                $params['payment_method_data'] = ['type' => 'customer_balance'];
+                $params['confirm'] = true;
+                $params['return_url'] = 'https://parkx.mx/';
                 $params['payment_method_options'] = [
-                    'bank_transfer' => [
-                        'funding_type' => 'spei'
+                    'customer_balance' => [
+                        'funding_type' => 'bank_transfer',
+                        'bank_transfer' => ['type' => 'mx_bank_transfer'],
                     ],
                 ];
             }
 
             $intent = $this->stripe->paymentIntents->create($params);
+            Log::info($intent);
 
             return response()->json(data: [
                 'client_secret' => $intent->client_secret,

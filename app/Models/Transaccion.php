@@ -20,4 +20,9 @@ class Transaccion extends Model
     {
         return $this->belongsTo(AppUser::class, 'user_id', 'id');
     }
+
+    public function estacionamiento()
+    {
+        return $this->belongsTo(Estacionamiento::class, 'estacionamiento_id', 'id');
+    }
 }

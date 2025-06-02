@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\MunicipioController;
 use App\Http\Controllers\Api\EstacionamientoController;
 use App\Http\Controllers\Api\PreguntaController;
 use App\Http\Controllers\Api\StripeController;
+use App\Http\Controllers\Api\TransaccionController;
 
 Route::post('/register',     [AuthController::class, 'register']);
 Route::post('/login',        [AuthController::class, 'login']);
@@ -49,5 +50,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/payment', [StripeController::class, 'payment']);
         Route::post('/attach', [StripeController::class, 'attachCard']);
         Route::post('/create-payment-intent', [StripeController::class, 'createPaymentIntent']);
+    });
+
+    Route::group([
+        'prefix' => 'transacciones'
+    ], function () {
+        Route::post('/abonos', [TransaccionController::class, 'getAbonos']);
+        Route::post('/pagos', [TransaccionController::class, 'getPagos']);
     });
 });

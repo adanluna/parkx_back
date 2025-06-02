@@ -11,7 +11,7 @@ class UserDeletedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Tu cuenta ha sido desactivada'
+            subject: '¡Gracias por haber sido parte de ParkX!'
         );
     }
 
