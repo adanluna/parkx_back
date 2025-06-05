@@ -3,7 +3,11 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "build-montoparkx": "cd nova-components/Montoparkx && npm run dev",
+        "build-montoparkx-prod": "cd nova-components/Montoparkx && npm run prod",
+        "build-monto": "cd nova-components/Monto && npm run dev",
+        "build-monto-prod": "cd nova-components/Monto && npm run prod"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

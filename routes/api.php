@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CuponController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PasswordController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Api\WalletController;
 use App\Http\Controllers\Api\EstadoController;
 use App\Http\Controllers\Api\MunicipioController;
 use App\Http\Controllers\Api\EstacionamientoController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PreguntaController;
 use App\Http\Controllers\Api\StripeController;
 use App\Http\Controllers\Api\TransaccionController;
@@ -57,5 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
     ], function () {
         Route::post('/abonos', [TransaccionController::class, 'getAbonos']);
         Route::post('/pagos', [TransaccionController::class, 'getPagos']);
+        Route::post('/create-payment', [PaymentController::class, 'addPayment']);
     });
+
+    Route::post('/cupon', [CuponController::class, 'findCupon']);
 });

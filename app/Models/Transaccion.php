@@ -27,4 +27,9 @@ class Transaccion extends Model
     {
         return $this->belongsTo(Estacionamiento::class, 'estacionamiento_id', 'id');
     }
+
+    public function cupon()
+    {
+        return $this->belongsTo(Cupon::class, 'cupon_id');
+    }
 }
