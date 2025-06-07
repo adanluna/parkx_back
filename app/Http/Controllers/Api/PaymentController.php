@@ -19,7 +19,7 @@ class PaymentController extends Controller
             'boleto' => 'required',
         ]);
 
-        $balance = DB::table('app_users')->where('id', $request->user()->id)->value('balance');
+        $balance = DB::table('wallets')->where('user_id', $request->user()->id)->value('balance');
 
         if ($balance < $request->total) {
             return response()->json([
